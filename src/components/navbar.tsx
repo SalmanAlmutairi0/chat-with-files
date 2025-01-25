@@ -1,6 +1,8 @@
 import React from "react";
 import { Button } from "./ui/button";
 import Link from "next/link";
+import { ModeToggle } from "./ui/mode-toggle";
+import { SignedIn, SignedOut, SignIn, SignInButton } from "@clerk/nextjs";
 
 export default function Navbar() {
   return (
@@ -9,7 +11,20 @@ export default function Navbar() {
         <Link href="/">
           <h1>مستنداتي الذكية</h1>
         </Link>
-        <Button className="bg-violet-800 hover:bg-violet-900">مستنداتي</Button>
+
+        <div className="flex items-center gap-4">
+          <ModeToggle />
+          <SignedIn>
+            <Link href="/myfiles">
+              <Button>مستنداتي</Button>
+            </Link>
+          </SignedIn>
+          <SignedOut>
+           <SignInButton>
+            <Button>تسجيل الدخول</Button>
+           </SignInButton>
+          </SignedOut>
+        </div>
       </div>
     </nav>
   );
