@@ -2,7 +2,7 @@ import React from "react";
 import { Button } from "./ui/button";
 import Link from "next/link";
 import { ModeToggle } from "./ui/mode-toggle";
-import { SignedIn, SignedOut, SignIn, SignInButton } from "@clerk/nextjs";
+import { SignedIn, SignedOut, SignIn, SignInButton, UserButton } from "@clerk/nextjs";
 
 export default function Navbar() {
   return (
@@ -14,16 +14,20 @@ export default function Navbar() {
 
         <div className="flex items-center gap-4">
           <ModeToggle />
+          
           <SignedIn>
             <Link href="/myfiles">
               <Button>مستنداتي</Button>
             </Link>
+            <UserButton />
           </SignedIn>
+
           <SignedOut>
            <SignInButton>
             <Button>تسجيل الدخول</Button>
            </SignInButton>
           </SignedOut>
+
         </div>
       </div>
     </nav>
