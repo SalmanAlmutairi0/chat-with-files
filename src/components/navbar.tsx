@@ -6,7 +6,7 @@ import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/nextjs";
 
 export default function Navbar() {
   return (
-    <nav className="font-semibold border-b border-gray-200">
+    <nav className="font-semibold border-b">
       <div className="container mx-auto p-4 flex items-center justify-between">
         <Link href="/">
           <h1>مستنداتي الذكية</h1>
