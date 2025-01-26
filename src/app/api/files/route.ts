@@ -1,10 +1,5 @@
-import { toast } from "@/hooks/use-toast";
 import { supabaseServer } from "@/lib/supabase";
 import { NextResponse } from "next/server";
-
-type RequestData = {
-  file: File;
-};
 
 export const POST = async (req: Request, res: Response) => {
   try {

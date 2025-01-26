@@ -18,9 +18,12 @@ import { RedirectToSignIn, useAuth } from "@clerk/nextjs";
 type UploadModalProps = {
   isLoading: boolean;
   setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
-}
+};
 
-export default function UploadModal({ isLoading, setIsLoading }: UploadModalProps) {
+export default function UploadModal({
+  isLoading,
+  setIsLoading,
+}: UploadModalProps) {
   const [file, setFile] = useState<File | null>(null);
   const [isOpen, setIsOpen] = useState(false);
   const { userId } = useAuth();
@@ -100,7 +103,6 @@ export default function UploadModal({ isLoading, setIsLoading }: UploadModalProp
         description: data.toast.description,
         variant: data.toast.variant,
       });
-
     } catch (error) {
       console.log(error);
       toast({
