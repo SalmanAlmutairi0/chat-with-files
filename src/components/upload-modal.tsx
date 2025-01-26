@@ -4,7 +4,6 @@ import React, { useState } from "react";
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -14,11 +13,22 @@ import { Upload } from "lucide-react";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
 import { useToast } from "@/hooks/use-toast";
+import { RedirectToSignIn, useAuth } from "@clerk/nextjs";
 
-export default function UploadModal() {
+type UploadModalProps = {
+  isLoading: boolean;
+  setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+export default function UploadModal({ isLoading, setIsLoading }: UploadModalProps) {
   const [file, setFile] = useState<File | null>(null);
-
+  const [isOpen, setIsOpen] = useState(false);
+  const { userId } = useAuth();
   const { toast } = useToast();
+
+  if (!userId) {
+    return <RedirectToSignIn />;
+  }
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
@@ -48,7 +58,7 @@ export default function UploadModal() {
     return true;
   };
 
-  const handleFileUpload = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleFileUpload = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!file) {
       toast({
@@ -66,12 +76,46 @@ export default function UploadModal() {
       return;
     }
 
-    console.log("file is valid");
-    // TODO: send the file to the server to be stored
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("userId", userId);
+
+    console.log(formData.get("userId"));
+    try {
+      setIsLoading(true);
+      setIsOpen(false);
+      // Send the file to the server
+      const res = await fetch("/api/files", {
+        method: "POST",
+        body: formData,
+      });
+
+      if (!res.ok) {
+        throw new Error("حدث خطأ اثناء رفع الملف");
+      }
+
+      const data = await res.json();
+      toast({
+        title: data.toast.title,
+        description: data.toast.description,
+        variant: data.toast.variant,
+      });
+
+    } catch (error) {
+      console.log(error);
+      toast({
+        title: "خطأ",
+        description: "حدث خطأ اثناء رفع الملف",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+      setFile(null);
+    }
   };
 
   return (
-    <Dialog>
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger>
         <Button>
           رفع ملف جديد <Upload />
