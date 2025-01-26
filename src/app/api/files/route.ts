@@ -66,6 +66,7 @@ export const POST = async (req: Request, res: Response) => {
         file_path: data.fullPath,
         file_format: file.type,
         file_size: file.size,
+        user_id: userid,
       })
       .single();
 
