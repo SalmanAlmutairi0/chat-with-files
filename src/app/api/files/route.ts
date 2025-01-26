@@ -40,12 +40,13 @@ export const POST = async (req: Request, res: Response) => {
     }
 
     const fileBuffer = await file.arrayBuffer();
-    const bucketName = "files";
+    const bucketName = "files" as string;
+    const uploadPath = `public/${userid}/${file.name}`;
 
     // seving file in supabase storage
     const { data, error } = await supabaseServer.storage
       .from(bucketName)
-      .upload(`public/${userid}/${file.name}`, fileBuffer, {
+      .upload(uploadPath, fileBuffer, {
         contentType: file.type,
       });
 
@@ -70,7 +71,8 @@ export const POST = async (req: Request, res: Response) => {
         file_path: data.fullPath,
         file_format: file.type,
         file_size: file.size,
-      });
+      })
+      .single();
 
     if (fileError) {
       console.error("Error saving file metadata:", fileError);
