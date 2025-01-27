@@ -1,4 +1,5 @@
 import { supabaseServer } from "@/lib/supabase";
+import { CloudLightning } from "lucide-react";
 import { NextResponse } from "next/server";
 
 export const POST = async (req: Request, res: Response) => {
@@ -105,4 +106,42 @@ export const POST = async (req: Request, res: Response) => {
       },
     });
   }
+};
+
+
+export const GET = async (req: Request) => {
+  const { searchParams } = new URL(req.url);
+  const userID = searchParams.get("userID");
+  console.log("User ID:", userID);
+
+  if (!userID) {
+    return NextResponse.json({
+      status: 401,
+      message: "not authorized you have to login first",
+    });
+  }
+
+  const { data, error} = await supabaseServer
+  .from("files")
+  .select("*")
+  .eq("user_id", userID);
+
+
+  if (error) {
+    console.error("Error fetching files:", error);
+    return NextResponse.json({
+      status: 500,
+      message: "Error fetching files",
+    });
+  }
+
+  console.log(data);
+
+
+  return NextResponse.json({
+    status: 200,
+    message: "Files fetched successfully",
+    data: data,
+  });
+ 
 };
