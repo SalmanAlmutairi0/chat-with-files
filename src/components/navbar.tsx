@@ -14,7 +14,7 @@ export default function Navbar() {
 
         <div className="flex items-center gap-4">
           <ModeToggle />
-          
+
           <SignedIn>
             <Link href="/myfiles">
               <Button>مستنداتي</Button>
@@ -23,11 +23,10 @@ export default function Navbar() {
           </SignedIn>
 
           <SignedOut>
-           <SignInButton>
-            <Button>تسجيل الدخول</Button>
-           </SignInButton>
+            <SignInButton>
+              <Button>تسجيل الدخول</Button>
+            </SignInButton>
           </SignedOut>
-
         </div>
       </div>
     </nav>

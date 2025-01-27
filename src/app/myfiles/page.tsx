@@ -1,5 +1,4 @@
 "use client";
-import FileCard from "@/components/file-card";
 import FileList from "@/components/file-list";
 import SkeletonCard from "@/components/skeleton-card";
 import UploadModal from "@/components/upload-modal";

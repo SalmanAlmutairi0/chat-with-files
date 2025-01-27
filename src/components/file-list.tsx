@@ -3,7 +3,6 @@
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@clerk/nextjs";
 import React, { useEffect, useState } from "react";
-import SkeletonCard from "./skeleton-card";
 import FileCard from "./file-card";
 
 export type Files = {
@@ -23,7 +22,11 @@ type FileRes = {
   data: Files[] | [];
 };
 
-export default function FileList({ newFileUploaded }: { newFileUploaded: boolean }) {
+export default function FileList({
+  newFileUploaded,
+}: {
+  newFileUploaded: boolean;
+}) {
   const [files, setFiles] = useState<Files[]>([]);
   const { userId } = useAuth();
   const { toast } = useToast();
@@ -62,10 +65,7 @@ export default function FileList({ newFileUploaded }: { newFileUploaded: boolean
   return (
     <>
       {files.map((file) => (
-          <FileCard
-            key={file.id}
-            props={file}
-            />
+        <FileCard key={file.id} props={file} />
       ))}
     </>
   );
