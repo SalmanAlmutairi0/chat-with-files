@@ -23,7 +23,7 @@ export default function RootLayout({
 }>) {
   return (
     <ClerkProvider>
-      <html lang="en" dir="rtl">
+      <html lang="en" dir="rtl" suppressHydrationWarning>
         <body className={ibmPlexSansArabic.className}>
           <ThemeProvider
             attribute="class"
