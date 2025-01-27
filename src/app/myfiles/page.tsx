@@ -1,5 +1,6 @@
 "use client";
 import FileCard from "@/components/file-card";
+import FileList from "@/components/file-list";
 import SkeletonCard from "@/components/skeleton-card";
 import UploadModal from "@/components/upload-modal";
 import React, { useState } from "react";
@@ -18,10 +19,7 @@ export default function MyFiles() {
 
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 justify-items-center">
         {isUploadLoading && <SkeletonCard />}
-        <FileCard />
-        <FileCard />
-        <FileCard />
-        <FileCard />
+        <FileList newFileUploaded={isUploadLoading} />
       </div>
     </div>
   );
