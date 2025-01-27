@@ -64,6 +64,14 @@ export default function FileList({
 
   return (
     <>
+    {files.length === 0 && !newFileUploaded && (
+
+      <div className="absolute space-y-3 text-center">
+        <h1 className="text-4xl font-bold"> ماعندك ملفات حالياً 📂</h1>
+        <p className="text-gray-500">⬆️ ارفع ملف وابدا تواصل معه الان 📄</p>
+      </div>
+
+      )}
       {files.map((file) => (
         <FileCard key={file.id} props={file} />
       ))}
