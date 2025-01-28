@@ -45,10 +45,12 @@ export async function GET(
       throw new Error("File path is missing");
     }
 
+    
     // geting the file url from the storage
+    const filePathWithoutBucketName = data.file_path.replace(/^files\//, "");
     const { data: fileData } = supabaseServer.storage
       .from("files")
-      .getPublicUrl(data.file_path);
+      .getPublicUrl(filePathWithoutBucketName);
 
     const fileDetails = {
       id: data.id,
