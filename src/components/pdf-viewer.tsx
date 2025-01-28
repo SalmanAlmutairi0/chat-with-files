@@ -56,7 +56,7 @@ export default function PdfViewer({ fileID }: { fileID: string }) {
           ) : null}
 
           <iframe
-            src={file?.file_url}
+            src={`${file?.file_url}#toolbar=0&navpanes=0&scrollbar=0`}
             className="w-full h-full rounded-lg border"
           />
         </div>
