@@ -1,5 +1,6 @@
+import openai from "@/lib/openai";
 import { supabaseServer } from "@/lib/supabase";
-import { CloudLightning } from "lucide-react";
+import { PDFLoader } from "@langchain/community/document_loaders/fs/pdf";
 import { NextResponse } from "next/server";
 
 export const POST = async (req: Request, res: Response) => {
@@ -35,7 +36,7 @@ export const POST = async (req: Request, res: Response) => {
       });
     }
 
-    const fileBuffer = await file.arrayBuffer();
+    const fileBuffer = new Blob([file]);
     const bucketName = "files" as string;
     const uploadPath = `public/${userid}/${file.name}`;
 
@@ -69,6 +70,7 @@ export const POST = async (req: Request, res: Response) => {
         file_size: file.size,
         user_id: userid,
       })
+      .select()
       .single();
 
     if (fileError) {
@@ -84,13 +86,44 @@ export const POST = async (req: Request, res: Response) => {
       });
     }
 
+    const pdfLoader = new PDFLoader(fileBuffer);
+    const documents = await pdfLoader.load();
+
+    // Convert the text to embeddings (vectorize) using OpenAI
+    const embeddings = await openai.embeddings.create({
+      model: "text-embedding-ada-002",
+      input: documents.map((doc) => doc.pageContent),
+    });
+
+    const embeddingRecords = embeddings.data.map((embedding) => ({
+      file_id: fileData.id,
+      vector: embedding.embedding,
+    }));
+
+    // insert embeddings in db
+    const { error: embedError } = await supabaseServer
+      .from("embeddings")
+      .insert(embeddingRecords);
+
+    if (embedError) {
+      console.error("Embedding save error:", embedError);
+      return NextResponse.json({
+        status: 500,
+        message: "Failed to save embeddings",
+      });
+    }
+
     return NextResponse.json({
       status: 200,
-      message: "File uploaded successfully",
-      data: fileData,
+      message: "File processed successfully",
+      data: {
+        fileId: fileData.id,
+        pages: documents.length,
+        embeddings: embeddingRecords.length,
+      },
       toast: {
         title: "تم",
-        description: "تم رفع الملف بنجاح",
+        description: "تم معالجة الملف بنجاح",
         variant: "default",
       },
     });
@@ -108,7 +141,6 @@ export const POST = async (req: Request, res: Response) => {
   }
 };
 
-
 export const GET = async (req: Request) => {
   const { searchParams } = new URL(req.url);
   const userID = searchParams.get("userID");
@@ -121,11 +153,10 @@ export const GET = async (req: Request) => {
     });
   }
 
-  const { data, error} = await supabaseServer
-  .from("files")
-  .select("*")
-  .eq("user_id", userID);
-
+  const { data, error } = await supabaseServer
+    .from("files")
+    .select("*")
+    .eq("user_id", userID);
 
   if (error) {
     console.error("Error fetching files:", error);
@@ -137,11 +168,9 @@ export const GET = async (req: Request) => {
 
   console.log(data);
 
-
   return NextResponse.json({
     status: 200,
     message: "Files fetched successfully",
     data: data,
   });
- 
 };
