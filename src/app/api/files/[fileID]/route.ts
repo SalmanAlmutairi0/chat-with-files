@@ -17,6 +17,7 @@ export async function GET(
   { params }: { params: { fileID: string } }
 ) {
   const { fileID } = await params;
+
   const url = new URL(request.url);
   const userID = url.searchParams.get("userID");
 

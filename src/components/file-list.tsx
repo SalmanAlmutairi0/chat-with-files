@@ -68,7 +68,7 @@ export default function FileList({
     };
 
     fetchFiles();
-  }, [userId, newFileUploaded]);
+  }, [userId, newFileUploaded, toast]);
 
   return (
     <>
