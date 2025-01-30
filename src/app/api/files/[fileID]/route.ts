@@ -52,14 +52,14 @@ export async function GET(
 
     // geting the file url from the storage
     const filePathWithoutBucketName = data.file_path.replace(/^files\//, "");
-    const { data: fileData } = supabaseServer.storage
+    const { data: fileData } = await supabaseServer.storage
       .from("files")
-      .getPublicUrl(filePathWithoutBucketName);
+      .createSignedUrl(filePathWithoutBucketName, 60);
 
     const fileDetails = {
       id: data.id,
       file_name: data.file_name,
-      file_url: fileData.publicUrl,
+      file_url: fileData?.signedUrl,
     };
 
     return NextResponse.json({
