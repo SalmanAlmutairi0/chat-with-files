@@ -11,12 +11,14 @@ export function useChat(fileID: string) {
   const { userId } = useAuth();
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [message, setMessage] = useState<string>("");
+  const [isFetchingMessages, setIsFetchingMessages] = useState(false);
   const [sendMessageLoading, setSendMessageLoading] = useState(false);
   const [isAiMessageLoading, setIsAiMessageLoading] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
 
   useEffect(() => {
     const getUserMessages = async () => {
+      setIsFetchingMessages(true);
       try {
         const res = await fetch(`/api/chat/messages?fileId=${fileID}`);
         if (!res.ok) throw new Error("Error fetching messages");
@@ -25,6 +27,8 @@ export function useChat(fileID: string) {
         setMessages(data.data);
       } catch (e) {
         console.error(e);
+      } finally {
+        setIsFetchingMessages(false);
       }
     };
 
@@ -83,6 +87,7 @@ export function useChat(fileID: string) {
     messages,
     message,
     textareaRef,
+    isFetchingMessages,
     sendMessageLoading,
     isAiMessageLoading,
     handleInputChange,
