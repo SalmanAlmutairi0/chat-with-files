@@ -1,109 +1,24 @@
 "use client";
-import React, { useEffect, useRef, useState } from "react";
+import React from "react";
 import { ScrollArea } from "./ui/scroll-area";
 import { Button } from "./ui/button";
 import { Send } from "lucide-react";
 import { Textarea } from "./ui/textarea";
 import MessagesList from "./messages-list";
-import { useAuth } from "@clerk/nextjs";
+import { useChat } from "@/hooks/use-chat";
 
-export type ChatMessage = {
-  id: number;
-  message: string;
-  is_user_message: boolean;
-};
 
 export default function Chat({ fileID }: { fileID: string }) {
-  const { userId } = useAuth();
-  const [messages, setMessages] = useState<ChatMessage[] | []>([]);
-  const [message, setMessage] = useState<string>("");
-  const [sednMessageLoading, setSendMessageLoading] = useState(false);
-  const [isAiMessageLoading, setisAiMessageLoading] = useState(false);
-  const textareaRef = useRef<HTMLTextAreaElement | null>(null);
-
-  useEffect(() => {
-    const getUserMessages = async () => {
-      try {
-        const res = await fetch(`/api/chat/messages?fileId=${fileID}`)
-
-        if(!res.ok){
-          console.log("something went wrong");
-          throw new Error("something went wrong")
-        }
-
-        const data = await res.json()
-        setMessages(data.data)
-        console.log(data);
-
-      } catch (e) {
-        console.log(e);
-      }
-    };
-
-    getUserMessages();
-  }, []);
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setMessage(() => e.target.value);
-
-    if (textareaRef.current) {
-      textareaRef.current.style.height = "auto";
-      textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
-    }
-  };
-
-  const handleSendMessage = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
-    if (message.trim() === "") {
-      return;
-    }
-
-    // add user message to the array
-    setMessages((prev) => [
-      ...prev,
-      {
-        id: Date.now(),
-        message: message,
-        is_user_message: true,
-      },
-    ]);
-    setMessage("");
-
-    try {
-      setSendMessageLoading(true);
-      setisAiMessageLoading(true);
-      const res = await fetch("/api/chat/messages", {
-        method: "POST",
-        body: JSON.stringify({ userId, fileID, userMessage: message }),
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-
-      if (!res.ok) {
-        throw new Error("حدث خطأ اثناء ارسال الرسالة");
-      }
-
-      const data = await res.json();
-      setMessages((prev) => [
-        ...prev,
-        {
-          id: Date.now(),
-          message: data.data.message,
-          is_user_message: data.data.is_user_message,
-        },
-      ]);
-
-      console.log("user message", data.message);
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setSendMessageLoading(false);
-      setisAiMessageLoading(false);
-    }
-  };
-
+    const {
+      messages,
+      message,
+      textareaRef,
+      sendMessageLoading,
+      isAiMessageLoading,
+      handleInputChange,
+      handleSendMessage,
+    } = useChat(fileID);
+ 
   return (
     <div className="w-1/2 border rounded-lg flex flex-col justify-between">
       <div className="p-4 border-b">
@@ -111,7 +26,7 @@ export default function Chat({ fileID }: { fileID: string }) {
       </div>
 
       <ScrollArea className="p-4 text-right flex-1">
-        <MessagesList messages={messages}  />
+        <MessagesList messages={messages} />
         {isAiMessageLoading ? (
           <p className="flex justify-start text-secondary animate-bounce">
             {" "}
@@ -135,7 +50,7 @@ export default function Chat({ fileID }: { fileID: string }) {
         <Button
           className="px-4 py-5 h-12"
           type="submit"
-          disabled={sednMessageLoading}
+          disabled={sendMessageLoading}
         >
           <Send size={24} />
         </Button>

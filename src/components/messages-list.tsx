@@ -1,6 +1,6 @@
 import React from "react";
 import Message from "./message";
-import { ChatMessage } from "./chat";
+import { ChatMessage } from "@/hooks/use-chat";
 
 
 export default function MessagesList({ messages }: { messages: ChatMessage[] }) {
