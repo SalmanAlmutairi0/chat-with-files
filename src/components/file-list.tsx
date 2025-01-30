@@ -62,8 +62,8 @@ export default function FileList({
           description: "حدث خطأ اثناء جلب الملفات",
           variant: "destructive",
         });
-      }finally {
-        setLoading(false);  
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -72,23 +72,26 @@ export default function FileList({
 
   return (
     <>
-      {loading && <LoadingCard />}
-
       {files.length === 0 && !newFileUploaded && !loading && (
         <div className="absolute space-y-3 text-center">
           <h1 className="text-4xl font-bold"> ماعندك ملفات حالياً 📂</h1>
           <p className="text-gray-500">⬆️ ارفع ملف وابدا تواصل معه الان 📄</p>
         </div>
       )}
-      {files.map((file) => (
-        <Link
-          href={`/myfiles/${file.id}`}
-          key={file.id}
-          className="w-full transition duration-300 ease-in-out transform  hover:-translate-y-2"
-        >
-          <FileCard key={file.id} props={file} />
-        </Link>
-      ))}
+
+      {loading ? (
+        <LoadingCard />
+      ) : (
+        files.map((file) => (
+          <Link
+            href={`/myfiles/${file.id}`}
+            key={file.id}
+            className="w-full transition duration-300 ease-in-out transform  hover:-translate-y-2"
+          >
+            <FileCard key={file.id} props={file} />
+          </Link>
+        ))
+      )}
     </>
   );
 }
