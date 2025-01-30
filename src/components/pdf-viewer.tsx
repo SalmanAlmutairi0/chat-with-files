@@ -19,8 +19,7 @@ export default function PdfViewer({ fileID }: { fileID: string }) {
     const fetchFile = async () => {
       setLoading(true);
       try {
-        const res = await fetch(`/api/files/${fileID}?userID=${userId}`, {
-        });
+        const res = await fetch(`/api/files/${fileID}?userID=${userId}`);
 
         if (!res.ok) {
           throw new Error("Error fetching file");
@@ -38,8 +37,6 @@ export default function PdfViewer({ fileID }: { fileID: string }) {
     fetchFile();
   }, [fileID, userId]);
 
-
- 
   return (
     <div className="flex-1 border rounded-lg">
       <div className="h-full flex flex-col">
@@ -53,12 +50,12 @@ export default function PdfViewer({ fileID }: { fileID: string }) {
               {" "}
               <Loader2 size={60} className="animate-spin" />{" "}
             </div>
-          ) : null}
-
-          <iframe
-            src={`${file?.file_url}#toolbar=0&navpanes=0&scrollbar=0`}
-            className="w-full h-full rounded-lg border"
-          />
+          ) : (
+            <iframe
+              src={`${file?.file_url}#toolbar=0&navpanes=0&scrollbar=0`}
+              className="w-full h-full rounded-lg border"
+            />
+          )}
         </div>
       </div>
     </div>

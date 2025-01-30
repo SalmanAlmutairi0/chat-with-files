@@ -7,19 +7,18 @@ import { Textarea } from "./ui/textarea";
 import MessagesList from "./messages-list";
 import { useChat } from "@/hooks/use-chat";
 
-
 export default function Chat({ fileID }: { fileID: string }) {
-    const {
-      messages,
-      message,
-      textareaRef,
-      isFetchingMessages,
-      sendMessageLoading,
-      isAiMessageLoading,
-      handleInputChange,
-      handleSendMessage,
-    } = useChat(fileID);
- 
+  const {
+    messages,
+    message,
+    textareaRef,
+    isFetchingMessages,
+    sendMessageLoading,
+    isAiMessageLoading,
+    handleInputChange,
+    handleSendMessage,
+  } = useChat(fileID);
+
   return (
     <div className="w-1/2 border rounded-lg flex flex-col justify-between">
       <div className="p-4 border-b">
@@ -27,17 +26,21 @@ export default function Chat({ fileID }: { fileID: string }) {
       </div>
 
       <ScrollArea className="p-4 text-right flex-1">
-      {isFetchingMessages ? <div className="absolute flex justify-center items-center w-full h-full"> <Loader2 size={55} className="animate-spin" /> </div> : 
-      <>
-        <MessagesList messages={messages} />
-        {isAiMessageLoading ? (
-          <p className="flex justify-start text-secondary animate-bounce">
-          {" "}
-          الذكاء الاصطناعي يفكر...{" "}
-          </p>
-        ) : null}
-      </>
-      }
+        {isFetchingMessages ? (
+          <div className="absolute flex justify-center items-center w-full h-full">
+            {" "}
+            <Loader2 size={55} className="animate-spin" />{" "}
+          </div>
+        ) : (
+          <>
+            <MessagesList messages={messages} />
+            {isAiMessageLoading ? (
+              <p className="flex justify-start text-gray-500 animate-bounce ">
+                الذكاء الاصطناعي يفكر...
+              </p>
+            ) : null}
+          </>
+        )}
       </ScrollArea>
 
       <form
