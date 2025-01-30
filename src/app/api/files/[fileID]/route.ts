@@ -1,4 +1,5 @@
 import { supabaseServer } from "@/lib/supabase";
+import { PostgrestError } from "@supabase/supabase-js";
 import { NextResponse } from "next/server";
 
 type fileMetaData = {
@@ -28,7 +29,10 @@ export async function GET(
       throw new Error("not authorized, you have to login first");
     }
 
-    const { data, error }: { data: fileMetaData | null; error: any } =
+    const {
+      data,
+      error,
+    }: { data: fileMetaData | null; error: PostgrestError | null } =
       await supabaseServer
         .from("files")
         .select("*")
@@ -45,7 +49,6 @@ export async function GET(
       throw new Error("File path is missing");
     }
 
-    
     // geting the file url from the storage
     const filePathWithoutBucketName = data.file_path.replace(/^files\//, "");
     const { data: fileData } = supabaseServer.storage
