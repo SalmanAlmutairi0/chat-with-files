@@ -15,11 +15,6 @@ export const POST = async (req: Request, res: Response) => {
       return NextResponse.json({
         status: 401,
         message: "not authorized you have to login first",
-        toast: {
-          title: "خطأ",
-          description: "يجب تسجيل الدخول اولا",
-          variant: "destructive",
-        },
       });
     }
 
@@ -28,11 +23,6 @@ export const POST = async (req: Request, res: Response) => {
       return NextResponse.json({
         status: 404,
         message: "No file received",
-        toast: {
-          title: "خطأ",
-          description: "الرجاء اختيار ملف",
-          variant: "destructive",
-        },
       });
     }
 
@@ -98,7 +88,7 @@ export const POST = async (req: Request, res: Response) => {
     const embeddingRecords = embeddings.data.map((embedding, index) => ({
       file_id: fileData.id,
       vector: embedding.embedding,
-      content: documents[index].pageContent
+      content: documents[index].pageContent,
     }));
 
     // insert embeddings in db
