@@ -22,7 +22,7 @@ export default function MessagesList({ messages }: { messages: ChatMessage[] }) 
         <Message
           key={message.id}
           message={message.message}
-          isUserMessage={message.isUserMessage}
+          is_user_message={message.is_user_message}
         />
       ))}
     </>

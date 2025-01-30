@@ -1,18 +1,28 @@
 import React from 'react'
+import ReactMarkdown from "react-markdown";
 
-export default function Message({message, isUserMessage}: {message: string, isUserMessage: boolean}) {
+
+export default function Message({
+  message,
+  is_user_message,
+}: {
+  message: string;
+  is_user_message: boolean;
+}) {
   return (
     <div
       className={`flex items-center  ${
-        isUserMessage ? "justify-end" : "justify-start"
+        is_user_message ? "justify-end" : "justify-start"
       }`}
     >
       <div
         className={`max-w-xs md:max-w-sm lg:max-w-lg break-words text-white p-2 rounded-lg my-2 ${
-          isUserMessage ? "bg-primary" : "bg-blue-500"
+          is_user_message ? "bg-primary" : "bg-blue-500"
         }`}
       >
-        <p className="text-sm  ">{message}</p>
+        <ReactMarkdown >
+          {message}
+        </ReactMarkdown>
       </div>
     </div>
   );
