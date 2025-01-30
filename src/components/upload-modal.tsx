@@ -16,12 +16,10 @@ import { useToast } from "@/hooks/use-toast";
 import { RedirectToSignIn, useAuth } from "@clerk/nextjs";
 
 type UploadModalProps = {
-  isLoading: boolean;
   setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 export default function UploadModal({
-  isLoading,
   setIsLoading,
 }: UploadModalProps) {
   const [file, setFile] = useState<File | null>(null);

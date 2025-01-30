@@ -3,7 +3,7 @@ import { supabaseServer } from "@/lib/supabase";
 import { PDFLoader } from "@langchain/community/document_loaders/fs/pdf";
 import { NextResponse } from "next/server";
 
-export const POST = async (req: Request, res: Response) => {
+export const POST = async (req: Request) => {
   try {
     const formData = await req.formData();
     const file = formData.get("file") as File;

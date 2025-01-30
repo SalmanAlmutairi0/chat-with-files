@@ -11,7 +11,6 @@ export default function MyFiles() {
       <div className="flex items-center justify-between px-2 md:px-4">
         <h1 className="text-3xl font-semibold ">مستنداتي</h1>
         <UploadModal
-          isLoading={isUploadLoading}
           setIsLoading={setIsUploadLoading}
         />
       </div>
