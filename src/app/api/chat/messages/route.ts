@@ -145,46 +145,6 @@ export const POST = async (req: Request) => {
       ],
     });
 
-    //     const res = await openai.chat.completions.create({
-    //       model: "gpt-4o",
-    //       messages: [
-    //         {
-    //           role: "system",
-    //           content: `You are an AI assistant that responds using semantic HTML with Tailwind CSS classes for styling. Follow these rules:
-    //           1. Use HTML markup with Tailwind utility classes for layout and formatting
-    //           2. Never add color classes (text-, bg-, border- colors) - colors are handled by CSS variables
-    //           3. Use proper semantic elements (article, section, ul/ol for lists)
-    //           4. Create tables using Tailwind table classes when presenting structured data
-    //           5. Maintain clean typography using text-size classes (text-base, text-lg)
-    //           6. Use space-y-* classes for vertical spacing between elements
-    //           7. Format code snippets with <code> tags and monospace font class
-    //           8. Never use inline styles or <style> tags`,
-    //         },
-    //         {
-    //           role: "user",
-    //           content: `Answer the question using HTML with Tailwind classes (NO COLOR CLASSES). Rules:
-    //         - Text formatting: Use classes like font-bold, italic, underline
-    //         - Lists: Use ul/ol with list-disc/list-decimal and space-y-2
-    //         - Tables: Use table, table-auto, thead, tr, th/td with border classes
-    //         - Code: Wrap in <code class="font-mono">
-    //         - Sections: Use space-y-4 between sections
-    //         - Links: Use underline class only
-
-    //          PREVIOUS CONVERSATION:
-    //            ${formattedPrevMessages.map((message) => {
-    //              if (message.role === "user") return `User: ${message.content}\n`;
-    //              return `Assistant: ${message.content}\n`;
-    //            })}
-
-    //           Context:
-    //           ${context}
-
-    //           Question: ${userMessage}
-
-    // `,
-    //         },
-    //       ],
-    //     });
 
     const aiResponse = res.choices[0].message.content;
     if (!aiResponse) {
