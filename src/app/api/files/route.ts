@@ -95,9 +95,10 @@ export const POST = async (req: Request, res: Response) => {
       input: documents.map((doc) => doc.pageContent),
     });
 
-    const embeddingRecords = embeddings.data.map((embedding) => ({
+    const embeddingRecords = embeddings.data.map((embedding, index) => ({
       file_id: fileData.id,
       vector: embedding.embedding,
+      content: documents[index].pageContent
     }));
 
     // insert embeddings in db
