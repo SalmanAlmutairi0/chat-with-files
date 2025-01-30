@@ -41,7 +41,7 @@ export default function PdfViewer({ fileID }: { fileID: string }) {
     <div className="flex-1 border rounded-lg">
       <div className="h-full flex flex-col">
         <div className="p-4 border-b">
-          <h2 className="text-lg text-left font-semibold">file_example.pdf</h2>
+          <h2 className="text-lg text-left font-semibold">{file?.file_name}</h2>
         </div>
 
         <div className="flex-1 p-2 flex justify-center items-center">
