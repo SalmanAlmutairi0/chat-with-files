@@ -12,12 +12,12 @@ type fileMetaData = {
   uploaded_at: string;
   deleted_at: string | null;
 };
+
 export async function GET(
   request: Request,
-  { params }: { params: { fileID: string } }
+  { params }: { params: Promise<{ fileID: string }> }
 ) {
   const { fileID } = await params;
-
   const url = new URL(request.url);
   const userID = url.searchParams.get("userID");
 
