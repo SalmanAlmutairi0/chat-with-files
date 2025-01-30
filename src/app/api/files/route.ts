@@ -147,6 +147,7 @@ export const GET = async (req: Request) => {
   const { data, error } = await supabaseServer
     .from("files")
     .select("*")
+    .order("id", { ascending: false })
     .eq("user_id", userID);
 
   if (error) {
