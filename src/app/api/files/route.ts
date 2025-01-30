@@ -33,7 +33,7 @@ export const POST = async (req: Request) => {
     // seving file in supabase storage
     const { data, error } = await supabaseServer.storage
       .from(bucketName)
-      .upload(uploadPath, fileBuffer, {
+      .upload(uploadPath, file, {
         contentType: file.type,
       });
 
