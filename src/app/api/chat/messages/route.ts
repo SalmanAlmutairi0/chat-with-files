@@ -177,6 +177,7 @@ export const POST = async (req: Request) => {
       model: res.model,
       data: {
         message: res.choices[0].message.content,
+        is_user_message:false
       },
     });
   } catch (error) {
