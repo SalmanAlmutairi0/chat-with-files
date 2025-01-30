@@ -1,4 +1,3 @@
-import Message from "@/components/message";
 import openai from "@/lib/openai";
 import { supabaseServer } from "@/lib/supabase";
 import { NextResponse } from "next/server";
@@ -6,6 +5,37 @@ import { NextResponse } from "next/server";
 type ChatMessage = {
   role: "user" | "assistant" | "system";
   content: string;
+};
+
+export const GET = async (req: Request) => {
+  const url = new URL(req.url);
+  const fileId = url.searchParams.get("fileId");
+ 
+  if (!fileId) {
+    return NextResponse.json({
+      status: 400,
+      message: "fileID is required",
+    });
+  }
+
+  const {data, error} = await supabaseServer.from("messages").select("id, message, is_user_message").eq("file_id", fileId)
+
+  if(error) {
+    console.log("error geting user messages");
+    return NextResponse.json({
+      status: 500,
+      message: "Error geting user messages"
+    })
+  }
+
+  console.log(data);
+
+
+  return NextResponse.json({
+    status: 200,
+    message: "Messages retrieved successfully",
+    data: data,
+  });
 };
 
 export const POST = async (req: Request) => {
@@ -177,7 +207,7 @@ export const POST = async (req: Request) => {
       model: res.model,
       data: {
         message: res.choices[0].message.content,
-        is_user_message:false
+        is_user_message: false,
       },
     });
   } catch (error) {
