@@ -1,5 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useAuth } from "@clerk/nextjs";
+import { useToast } from "./use-toast";
+import { useRouter } from "next/navigation";
 
 export type ChatMessage = {
   id: number;
@@ -15,6 +17,8 @@ export function useChat(fileID: string) {
   const [sendMessageLoading, setSendMessageLoading] = useState(false);
   const [isAiMessageLoading, setIsAiMessageLoading] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
+  const { toast } = useToast();
+  const router = useRouter()
 
   useEffect(() => {
     const getUserMessages = async () => {
@@ -24,12 +28,20 @@ export function useChat(fileID: string) {
         if (!res.ok) throw new Error("Error fetching messages");
 
         const data = await res.json();
-        console.log(data);
+
+        if (data.status !== 200) {
+          toast({
+            title: "خطأ",
+            description: data.message,
+            variant: "destructive",
+          });
+
+          router.replace("/myfiles")
+        }
+
         setMessages(data.data);
       } catch (e) {
         console.error(e);
-        
-        
       } finally {
         setIsFetchingMessages(false);
       }

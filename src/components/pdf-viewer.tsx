@@ -1,5 +1,6 @@
 "use client";
 
+import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@clerk/nextjs";
 import { Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -13,16 +14,16 @@ type file = {
 
 export default function PdfViewer({ fileID }: { fileID: string }) {
   const { userId } = useAuth();
-  const router = useRouter() 
+  const router = useRouter();
   const [file, setFile] = useState<file | null>(null);
   const [loading, setLoading] = useState(false);
-
+  const { toast } = useToast();
 
   useEffect(() => {
     const fetchFile = async () => {
       setLoading(true);
       try {
-        const res = await fetch(`/api/files/${fileID}?userID=${userId}`);
+        const res = await fetch(`/api/files/${fileID}`);
 
         if (!res.ok) {
           throw new Error("Error fetching file");
@@ -30,7 +31,14 @@ export default function PdfViewer({ fileID }: { fileID: string }) {
 
         const data = await res.json();
 
-        if(data.status !== 200 ) router.replace('/myfiles')
+        if (data.status !== 200) {
+          toast({
+            title: "خطأ",
+            description: data.message,
+            variant: "destructive",
+          });
+          router.replace("/myfiles");
+        }
 
         setFile(() => data.data);
         console.log(data);

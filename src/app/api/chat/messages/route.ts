@@ -13,11 +13,11 @@ export const GET = async (req: Request) => {
   const fileId = url.searchParams.get("fileId");
   const { userId } = await auth();
 
-  if(!userId){
+  if (!userId) {
     return NextResponse.json({
       status: 401,
-      message:"unauthorized"
-    })
+      message: "unauthorized",
+    });
   }
 
   if (!fileId) {
@@ -30,7 +30,8 @@ export const GET = async (req: Request) => {
   const { data, error } = await supabaseServer
     .from("messages")
     .select("id, message, is_user_message")
-    .eq("file_id", fileId);
+    .eq("file_id", fileId)
+    .eq("user_id", userId);
 
   if (error) {
     console.log("error geting user messages");
@@ -50,7 +51,8 @@ export const GET = async (req: Request) => {
 };
 
 export const POST = async (req: Request) => {
-  const { userId, fileID, userMessage } = await req.json();
+  const { fileID, userMessage } = await req.json();
+  const { userId } = await auth();
   try {
     if (!userId) {
       return NextResponse.json({
@@ -164,8 +166,18 @@ export const POST = async (req: Request) => {
     const { error: insertMessagesError } = await supabaseServer
       .from("messages")
       .insert([
-        { file_id: fileID, message: userMessage, is_user_message: true },
-        { file_id: fileID, message: aiResponse, is_user_message: false },
+        {
+          file_id: fileID,
+          message: userMessage,
+          is_user_message: true,
+          user_id: userId,
+        },
+        {
+          file_id: fileID,
+          message: aiResponse,
+          is_user_message: false,
+          user_id: userId,
+        },
       ]);
 
     if (insertMessagesError) {
@@ -183,8 +195,6 @@ export const POST = async (req: Request) => {
   } catch (error) {
     return NextResponse.json({
       status: 500,
-      userId: userId,
-      fileID: fileID,
       message: (error as Error).message
         ? (error as Error).message
         : "internal server error",

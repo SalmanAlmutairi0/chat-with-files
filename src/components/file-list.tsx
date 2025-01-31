@@ -38,7 +38,7 @@ export default function FileList({
     const fetchFiles = async () => {
       try {
         setLoading(true);
-        const res = await fetch(`/api/files?userID=${userId?.trim()}`, {
+        const res = await fetch("/api/files", {
           cache: "no-store",
         });
 
