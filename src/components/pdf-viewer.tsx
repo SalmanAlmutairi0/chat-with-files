@@ -60,7 +60,7 @@ export default function PdfViewer({ fileID }: { fileID: string }) {
         </div>
 
         <div className="flex-1 p-2 flex justify-center items-center">
-          {loading ? (
+          {loading || !file?.file_url ? (
             <div className="absolute ">
               {" "}
               <Loader2 size={60} className="animate-spin" />{" "}
