@@ -7,6 +7,7 @@ import { ClerkProvider } from "@clerk/nextjs";
 import { Toaster } from "@/components/ui/toaster";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Analytics } from "@vercel/analytics/react";
+import Fotter from "@/components/fotter";
 const ibmPlexSansArabic = IBM_Plex_Sans_Arabic({
   subsets: ["arabic", "latin"],
   weight: ["400", "500", "600"],
@@ -35,7 +36,7 @@ export default function RootLayout({
             <Navbar />
             {children}
             <Toaster />
-
+            <Fotter />
             <Analytics />
             <SpeedInsights />
           </ThemeProvider>
