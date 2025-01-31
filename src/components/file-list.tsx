@@ -33,7 +33,6 @@ export default function FileList({
   const [loading, setLoading] = useState(false);
   const { userId } = useAuth();
   const { toast } = useToast();
-  console.log(userId);
 
   useEffect(() => {
     const fetchFiles = async () => {
