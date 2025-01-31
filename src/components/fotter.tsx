@@ -10,7 +10,10 @@ export default function Fotter() {
         </p>
         <div className="flex space-x-4 mt-4 md:mt-0">
           {/* LinkedIn Icon */}
-          <Link href={"#"}>
+          <Link
+            href={"https://www.linkedin.com/in/salman-almutairi-1427a22b6/"}
+            target="_blank"
+          >
             <svg
               className="w-6 h-6 fill-current"
               viewBox="0 0 24 24"
