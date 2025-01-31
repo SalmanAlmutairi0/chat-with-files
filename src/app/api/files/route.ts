@@ -1,5 +1,6 @@
 import openai from "@/lib/openai";
 import { supabaseServer } from "@/lib/supabase";
+import { auth } from "@clerk/nextjs/server";
 import { PDFLoader } from "@langchain/community/document_loaders/fs/pdf";
 import { NextResponse } from "next/server";
 
@@ -7,10 +8,10 @@ export const POST = async (req: Request) => {
   try {
     const formData = await req.formData();
     const file = formData.get("file") as File;
-    const userid = formData.get("userId") as string;
-    console.log("User ID:", userid);
+    const { userId } = await auth();
 
-    if (!userid) {
+
+    if (!userId) {
       console.log("not authorized you have to login first");
       return NextResponse.json({
         status: 401,
@@ -28,7 +29,7 @@ export const POST = async (req: Request) => {
 
     const fileBuffer = new Blob([file]);
     const bucketName = "files" as string;
-    const uploadPath = `public/${userid}/${file.name}`;
+    const uploadPath = `public/${userId}/${file.name}`;
 
     // seving file in supabase storage
     const { data, error } = await supabaseServer.storage
@@ -58,7 +59,7 @@ export const POST = async (req: Request) => {
         file_path: data.fullPath,
         file_format: file.type,
         file_size: file.size,
-        user_id: userid,
+        user_id: userId,
       })
       .select()
       .single();
@@ -133,11 +134,11 @@ export const POST = async (req: Request) => {
 };
 
 export const GET = async (req: Request) => {
-  const { searchParams } = new URL(req.url);
-  const userID = searchParams.get("userID");
-  console.log("User ID:", userID);
+  const { userId } = await auth();
 
-  if (!userID) {
+  console.log("User ID:", userId);
+
+  if (!userId) {
     return NextResponse.json({
       status: 401,
       message: "not authorized you have to login first",
@@ -148,7 +149,7 @@ export const GET = async (req: Request) => {
     .from("files")
     .select("*")
     .order("id", { ascending: false })
-    .eq("user_id", userID);
+    .eq("user_id", userId);
 
   if (error) {
     console.error("Error fetching files:", error);

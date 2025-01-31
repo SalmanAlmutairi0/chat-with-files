@@ -1,4 +1,5 @@
 import { supabaseServer } from "@/lib/supabase";
+import { auth } from "@clerk/nextjs/server";
 import { PostgrestError } from "@supabase/supabase-js";
 import { NextResponse } from "next/server";
 
@@ -18,15 +19,14 @@ export async function GET(
   { params }: { params: Promise<{ fileID: string }> }
 ) {
   const { fileID } = await params;
-  const url = new URL(request.url);
-  const userID = url.searchParams.get("userID");
+  const { userId } = await auth();
 
   try {
     if (!fileID) {
       throw new Error("fileID is required");
     }
 
-    if (!userID) {
+    if (!userId) {
       throw new Error("not authorized, you have to login first");
     }
 
@@ -38,7 +38,7 @@ export async function GET(
         .from("files")
         .select("*")
         .eq("id", fileID)
-        .eq("user_id", userID)
+        .eq("user_id", userId)
         .single();
 
     if (error) {

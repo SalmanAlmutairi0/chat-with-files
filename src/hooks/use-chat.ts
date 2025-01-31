@@ -24,9 +24,12 @@ export function useChat(fileID: string) {
         if (!res.ok) throw new Error("Error fetching messages");
 
         const data = await res.json();
+        console.log(data);
         setMessages(data.data);
       } catch (e) {
         console.error(e);
+        
+        
       } finally {
         setIsFetchingMessages(false);
       }

@@ -1,5 +1,6 @@
 import openai from "@/lib/openai";
 import { supabaseServer } from "@/lib/supabase";
+import { auth } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 
 type ChatMessage = {
@@ -10,7 +11,15 @@ type ChatMessage = {
 export const GET = async (req: Request) => {
   const url = new URL(req.url);
   const fileId = url.searchParams.get("fileId");
- 
+  const { userId } = await auth();
+
+  if(!userId){
+    return NextResponse.json({
+      status: 401,
+      message:"unauthorized"
+    })
+  }
+
   if (!fileId) {
     return NextResponse.json({
       status: 400,
@@ -18,18 +27,20 @@ export const GET = async (req: Request) => {
     });
   }
 
-  const {data, error} = await supabaseServer.from("messages").select("id, message, is_user_message").eq("file_id", fileId)
+  const { data, error } = await supabaseServer
+    .from("messages")
+    .select("id, message, is_user_message")
+    .eq("file_id", fileId);
 
-  if(error) {
+  if (error) {
     console.log("error geting user messages");
     return NextResponse.json({
       status: 500,
-      message: "Error geting user messages"
-    })
+      message: "Error geting user messages",
+    });
   }
 
   console.log(data);
-
 
   return NextResponse.json({
     status: 200,
@@ -144,7 +155,6 @@ export const POST = async (req: Request) => {
         },
       ],
     });
-
 
     const aiResponse = res.choices[0].message.content;
     if (!aiResponse) {

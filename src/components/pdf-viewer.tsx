@@ -2,6 +2,7 @@
 
 import { useAuth } from "@clerk/nextjs";
 import { Loader2 } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 type file = {
@@ -12,8 +13,10 @@ type file = {
 
 export default function PdfViewer({ fileID }: { fileID: string }) {
   const { userId } = useAuth();
+  const router = useRouter() 
   const [file, setFile] = useState<file | null>(null);
   const [loading, setLoading] = useState(false);
+
 
   useEffect(() => {
     const fetchFile = async () => {
@@ -26,7 +29,11 @@ export default function PdfViewer({ fileID }: { fileID: string }) {
         }
 
         const data = await res.json();
+
+        if(data.status !== 200 ) router.replace('/myfiles')
+
         setFile(() => data.data);
+        console.log(data);
       } catch (error) {
         console.error(error);
       } finally {
@@ -35,7 +42,7 @@ export default function PdfViewer({ fileID }: { fileID: string }) {
     };
 
     fetchFile();
-  }, [fileID, userId]);
+  }, [userId]);
 
   return (
     <div className="flex-1 border rounded-lg">

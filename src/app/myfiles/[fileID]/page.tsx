@@ -7,9 +7,7 @@ export default async function File({
 }: {
   params: Promise<{ fileID: string }>;
 }) {
-
-    const { fileID } = await params;
-
+  const { fileID } = await params;
 
   return (
     <div className="container flex justify-between mx-auto gap-4 mt-2 min-h-[80vh] max-h-[90vh]">
