@@ -1,9 +1,9 @@
-import Link from 'next/link';
-import React from 'react'
+import Link from "next/link";
+import React from "react";
 
 export default function Fotter() {
   return (
-    <div className="border-t py-6 max-h-[20vh]">
+    <div className="border-t py-6 mt-5 w-full ">
       <div className="container mx-auto flex flex-col md:flex-row items-center justify-between px-4">
         <p className=" text-sm">
           © {new Date().getFullYear()} جميع الحقوق محفوظة.

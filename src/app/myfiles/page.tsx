@@ -7,7 +7,7 @@ import React, { useState } from "react";
 export default function MyFiles() {
   const [isUploadLoading, setIsUploadLoading] = useState(false);
   return (
-    <div className="container mx-auto flex flex-col space-y-24 mt-10 ">
+    <div className="container mx-auto flex flex-col space-y-24 mt-10 min-h-svh ">
       <div className="flex items-center justify-between px-2 md:px-4">
         <h1 className="text-3xl font-semibold ">مستنداتي</h1>
         <UploadModal
