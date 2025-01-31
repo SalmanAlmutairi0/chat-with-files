@@ -10,7 +10,6 @@ export type ChatMessage = {
 };
 
 export function useChat(fileID: string) {
-  const { userId } = useAuth();
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [message, setMessage] = useState<string>("");
   const [isFetchingMessages, setIsFetchingMessages] = useState(false);
@@ -18,7 +17,7 @@ export function useChat(fileID: string) {
   const [isAiMessageLoading, setIsAiMessageLoading] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
   const { toast } = useToast();
-  const router = useRouter()
+  const router = useRouter();
 
   useEffect(() => {
     const getUserMessages = async () => {
@@ -36,7 +35,7 @@ export function useChat(fileID: string) {
             variant: "destructive",
           });
 
-          router.replace("/myfiles")
+          router.replace("/myfiles");
         }
 
         setMessages(data.data);
@@ -75,7 +74,7 @@ export function useChat(fileID: string) {
 
       const res = await fetch("/api/chat/messages", {
         method: "POST",
-        body: JSON.stringify({ userId, fileID, userMessage: message }),
+        body: JSON.stringify({ fileID, userMessage: message }),
         headers: { "Content-Type": "application/json" },
       });
 

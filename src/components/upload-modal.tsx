@@ -13,23 +13,15 @@ import { Upload } from "lucide-react";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
 import { useToast } from "@/hooks/use-toast";
-import { RedirectToSignIn, useAuth } from "@clerk/nextjs";
 
 type UploadModalProps = {
   setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-export default function UploadModal({
-  setIsLoading,
-}: UploadModalProps) {
+export default function UploadModal({ setIsLoading }: UploadModalProps) {
   const [file, setFile] = useState<File | null>(null);
   const [isOpen, setIsOpen] = useState(false);
-  const { userId } = useAuth();
   const { toast } = useToast();
-
-  if (!userId) {
-    return <RedirectToSignIn />;
-  }
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
@@ -79,9 +71,7 @@ export default function UploadModal({
 
     const formData = new FormData();
     formData.append("file", file);
-    formData.append("userId", userId);
 
-    console.log(formData.get("userId"));
     try {
       setIsLoading(true);
       setIsOpen(false);

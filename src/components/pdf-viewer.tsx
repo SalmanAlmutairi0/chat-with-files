@@ -13,7 +13,6 @@ type file = {
 };
 
 export default function PdfViewer({ fileID }: { fileID: string }) {
-  const { userId } = useAuth();
   const router = useRouter();
   const [file, setFile] = useState<file | null>(null);
   const [loading, setLoading] = useState(false);
@@ -50,7 +49,7 @@ export default function PdfViewer({ fileID }: { fileID: string }) {
     };
 
     fetchFile();
-  }, [userId]);
+  }, [fileID]);
 
   return (
     <div className="flex-1 border rounded-lg">
